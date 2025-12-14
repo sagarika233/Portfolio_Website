@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { GraduationCap, Calendar } from "lucide-react";
+import { useIsMobile } from "../hooks/use-mobile";
 
 const educationData = [
   {
@@ -36,6 +37,7 @@ const educationData = [
 const Education = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isMobile = useIsMobile();
 
   return (
     <section id="education" className="py-32" ref={ref}>
@@ -55,40 +57,44 @@ const Education = () => {
           </p>
         </motion.div>
 
-        <div className="max-w-3xl mx-auto">
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
+        <div className="relative max-w-4xl mx-auto">
+          {/* Vertical Timeline Line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-primary/30 h-full"></div>
 
-            {educationData.map((edu, index) => (
-              <motion.div
-                key={edu.degree}
-                initial={{ opacity: 0, x: -50 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.2 + index * 0.2 }}
-                className="relative pl-20 pb-12 last:pb-0"
-              >
-                {/* Timeline dot */}
-                <div className="absolute left-5 w-7 h-7 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center">
-                  <GraduationCap className="w-3.5 h-3.5 text-primary" />
-                </div>
+          <div className="space-y-12">
+            {educationData.map((edu, index) => {
+              const isLeft = index % 2 === 0;
+              return (
+                <motion.div
+                  key={edu.degree}
+                  initial={{ opacity: 0, x: isMobile ? 0 : (isLeft ? -50 : 50), y: isMobile ? 50 : 0 }}
+                  animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.2 + index * 0.2, ease: "easeOut" }}
+                  className={`relative flex items-center ${isMobile ? 'justify-center' : (isLeft ? 'justify-start' : 'justify-end')} w-full`}
+                >
+                  {/* Timeline Dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background z-10"></div>
 
-                <div className="glass rounded-2xl p-6 hover:border-primary/30 transition-all duration-300">
-                  <div className="flex items-center gap-2 text-primary text-sm mb-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{edu.period}</span>
+                  {/* Card */}
+                  <div className={`w-full max-w-md ${isMobile ? '' : (isLeft ? 'mr-8' : 'ml-8')} glass rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300`}>
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                      <h3 className="font-display text-xl md:text-2xl font-semibold mb-2 md:mb-0">{edu.degree}</h3>
+                      <div className="flex items-center gap-2 text-primary text-sm">
+                        <Calendar className="w-4 h-4" />
+                        <span>{edu.period}</span>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground text-lg mb-3">{edu.institution}</p>
+                    {(edu.cgpa || edu.percentage) && (
+                      <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                        {edu.cgpa ? `CGPA: ${edu.cgpa}` : `Percentage: ${edu.percentage}%`}
+                      </span>
+                    )}
+                    <p className="text-muted-foreground">{edu.description}</p>
                   </div>
-                  <h3 className="font-display text-xl font-semibold mb-1">{edu.degree}</h3>
-                  <p className="text-muted-foreground mb-3">{edu.institution}</p>
-                  {(edu.cgpa || edu.percentage) && (
-                    <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-3">
-                      {edu.cgpa ? `CGPA: ${edu.cgpa}` : `Percentage: ${edu.percentage}%`}
-                    </span>
-                  )}
-                  <p className="text-muted-foreground text-sm">{edu.description}</p>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

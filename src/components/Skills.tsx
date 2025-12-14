@@ -50,28 +50,27 @@ const Skills = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.2 + categoryIndex * 0.1 }}
-              className="glass rounded-2xl p-6 hover:border-primary/30 transition-all duration-300"
+              className="glass rounded-2xl p-6 hover:scale-105 hover:border-primary/30 transition-all duration-300"
             >
               <h3 className="font-display text-lg font-semibold mb-6 text-primary">
                 {category.title}
               </h3>
-              <ul className="space-y-3">
+              <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIndex) => (
-                  <motion.li
+                  <motion.span
                     key={skill}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
                     transition={{
                       duration: 0.4,
                       delay: 0.4 + categoryIndex * 0.1 + skillIndex * 0.05,
                     }}
-                    className="flex items-center gap-3 text-muted-foreground"
+                    className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-200"
                   >
-                    <span className="w-2 h-2 bg-primary rounded-full" />
                     {skill}
-                  </motion.li>
+                  </motion.span>
                 ))}
-              </ul>
+              </div>
             </motion.div>
           ))}
         </div>

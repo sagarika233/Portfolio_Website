@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Briefcase, GraduationCap, Code } from "lucide-react";
+import { useIsMobile } from "../hooks/use-mobile";
 
 const workExperienceData = [
   {
@@ -30,6 +31,7 @@ const workExperienceData = [
 const WorkExperience = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isMobile = useIsMobile();
 
   return (
     <section id="work-experience" className="py-32 bg-gradient-to-br from-background to-secondary/20" ref={ref}>
@@ -49,42 +51,46 @@ const WorkExperience = () => {
           </p>
         </motion.div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
+        <div className="relative max-w-4xl mx-auto">
+          {/* Vertical Timeline Line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-primary/30 h-full"></div>
 
-            {workExperienceData.map((exp, index) => (
-              <motion.div
-                key={exp.title}
-                initial={{ opacity: 0, x: -50 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.2 + index * 0.2 }}
-                className="relative pl-20 pb-12 last:pb-0"
-              >
-                {/* Timeline dot */}
-                <div className="absolute left-5 w-7 h-7 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center">
-                  <Briefcase className="w-3.5 h-3.5 text-primary" />
-                </div>
+          <div className="space-y-12">
+            {workExperienceData.map((exp, index) => {
+              const isLeft = index % 2 === 0;
+              return (
+                <motion.div
+                  key={exp.title}
+                  initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 0.2 + index * 0.2 }}
+                  className={`relative flex items-center ${isLeft ? 'justify-start' : 'justify-end'} w-full`}
+                >
+                  {/* Timeline Dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background z-10"></div>
 
-                <div className="glass rounded-2xl p-6 hover:border-primary/30 transition-all duration-300">
-                  <div className="flex items-center gap-2 text-primary text-sm mb-2">
-                    <Code className="w-4 h-4" />
-                    <span>{exp.period}</span>
-                    <span className="ml-auto px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                      {exp.type}
-                    </span>
+                  {/* Card */}
+                  <div className={`w-full max-w-md ${isLeft ? 'mr-8' : 'ml-8'} glass rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300`}>
+                    <div className="flex flex-col mb-4">
+                      <h3 className="font-display text-xl md:text-2xl font-semibold mb-2">{exp.title}</h3>
+                      <div className="flex items-center gap-4 mb-2">
+                        <div className="flex items-center gap-2 text-primary text-sm">
+                          <Code className="w-4 h-4" />
+                          <span>{exp.period}</span>
+                        </div>
+                        <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                          {exp.type}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground text-lg mb-4">{exp.company}</p>
+                    <p className="text-muted-foreground">{exp.description}</p>
                   </div>
-                  <h3 className="font-display text-xl font-semibold mb-1">{exp.title}</h3>
-                  <p className="text-muted-foreground mb-3">{exp.company}</p>
-                  <p className="text-muted-foreground text-sm">{exp.description}</p>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
-
-
       </div>
     </section>
   );
