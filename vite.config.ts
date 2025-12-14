@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-/*export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }) => ({
   base: "/Portfolio_Website/",
   server: {
     host: "::",
@@ -16,9 +16,4 @@ import { componentTagger } from "lovable-tagger";
       "@": path.resolve(__dirname, "./src"),
     },
   },
-}));*/
-
-export default defineConfig({
-  plugins: [react()],
-  base: "/Portfolio_Website/",
-});
+}));
