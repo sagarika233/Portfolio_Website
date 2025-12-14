@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: [http://localhost:8081/#]
+**URL**: http://localhost:8081/
 
 ## How can I edit this code?
 
